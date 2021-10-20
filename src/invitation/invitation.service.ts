@@ -1,0 +1,46 @@
+import { Injectable } from '@nestjs/common';
+import { CreateInvitationDto } from './dto/create-invitation.dto';
+import { UpdateInvitationDto } from './dto/update-invitation.dto';
+import {PrismaService } from '../prisma.service'
+import {
+  Invitation,
+  Prisma
+} from '@prisma/client';
+
+@Injectable()
+export class InvitationService {
+  constructor(private prisma: PrismaService) {}
+  
+  async create(data: CreateInvitationDto) {
+    const number = Math.floor(Math.random()*90000);
+    let code:number  =  number+ 10000;
+    return await this.prisma.invitation.create({data:{ code: code, email: data.email}})
+  }
+
+  async findAll() {
+    return await this.prisma.invitation.findMany();
+  }
+
+  async findOne(id: string) {
+    return await this.prisma.invitation.findFirst({
+      where: { id: id },
+    })
+  }
+
+  async update(email: string) {
+    const number = Math.floor(Math.random()*90000);
+    let code:number  =  number+ 10000;
+    return await this.prisma.invitation.update({
+      where: { email: email},
+      data: { code: code}
+    })
+  }
+
+  async remove(id: string) {
+    return await this.prisma.invitation.delete({
+      where:{
+        id
+      }
+    })
+  }
+}

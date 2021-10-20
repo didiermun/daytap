@@ -9,3 +9,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model Invitation {
+  id     String     @default(uuid()) @id
+  code   Int
+  email  String     @unique
+  isUsed Boolean    @default(false)
+  createdAt DateTime @default(now())
+}
