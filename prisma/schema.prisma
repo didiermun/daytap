@@ -18,3 +18,21 @@ model Invitation {
   isUsed Boolean    @default(false)
   createdAt DateTime @default(now())
 }
+
+model User {
+  id String @default(uuid()) @id
+  fname String
+  lname String
+  email String
+  password String
+  profile String?
+  level   LEVELS @default(USER)
+}
+
+
+
+
+enum LEVELS {
+  USER
+  ADMIN
+}
