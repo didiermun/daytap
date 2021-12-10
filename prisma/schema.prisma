@@ -19,6 +19,15 @@ model Invitation {
   createdAt DateTime @default(now())
 }
 
+model Report {
+  id String @default(uuid()) @id
+  date DateTime @default(now())
+  amount String
+  location String
+  reporterId String
+  reporter      User @relation(fields: [reporterId], references: [id])
+}
+
 model User {
   id String @default(uuid()) @id
   fname String
@@ -27,6 +36,7 @@ model User {
   password String
   profile String?
   level   LEVELS @default(USER)
+  reports Report[]
 }
 
 

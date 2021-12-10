@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService}  from '../prisma.service'
+import { PrismaService } from '../prisma.service';
 import { LoginDto } from './dto/login.dto';
 
 @Injectable()
@@ -10,19 +10,20 @@ export class UserService {
 
   async create(code: string,data: CreateUserDto) {
     const codeFound = await this.prisma.invitation.findFirst({
-      where: { code: parseInt(code), email: data.email},
-    })
+      where: { code: parseInt(code), email: data.email },
+    });
 
-    if(!codeFound){
+    if (!codeFound) {
       throw new HttpException('Code provided not found', HttpStatus.NOT_FOUND);
     }
-    return await this.prisma.user.create({data: {
-      email: data.email,
-      lname: data.lname,
-      fname: data.fname,
-      password: data.password,
-      profile: data.profile
-    }})
+    return await this.prisma.user.create({ data: {
+        email: data.email,
+        lname: data.lname,
+        fname: data.fname,
+        password: data.password,
+        profile: data.profile,
+      },
+    });
   }
 
   async findAll() {
@@ -30,16 +31,21 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const user = await this.prisma.user.findFirst({ where: {id: id}});
-    if(!user){
-      throw new HttpException('User that you are requesting is not found', HttpStatus.NOT_FOUND);
+    const user = await this.prisma.user.findFirst({ where: { id: id } });
+    if (!user) {
+      throw new HttpException(
+        'User that you are requesting is not found',
+        HttpStatus.NOT_FOUND,
+      );
     }
     return user;
   }
 
   async login(loginDto: LoginDto) {
-    const user = await this.prisma.user.findFirst({ where: {email: loginDto.email, password: loginDto.password}})
-    if(!user){
+    const user = await this.prisma.user.findFirst({
+      where: { email: loginDto.email, password: loginDto.password },
+    });
+    if (!user) {
       throw new HttpException('Wrong credentials', HttpStatus.NOT_FOUND)
     }
 
@@ -47,15 +53,15 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    return await this.prisma.user.update({ 
-      where: {id: id}, 
+    return await this.prisma.user.update({
+      where: { id: id },
       data: {
-        email: updateUserDto.email
-      }
-    })
+        email: updateUserDto.email,
+      },
+    });
   }
 
   async remove(id: string) {
-    return await this.prisma.user.delete({where: {id: id}})
+    return await this.prisma.user.delete({ where: { id: id } });
   }
 }

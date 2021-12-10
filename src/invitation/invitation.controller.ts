@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { InvitationService } from './invitation.service';
 import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
@@ -9,7 +17,7 @@ export class InvitationController {
 
   @Post()
   async create(@Body() createInvitationDto: CreateInvitationDto) {
-     return await this.invitationService.create(createInvitationDto);
+    return await this.invitationService.create(createInvitationDto);
   }
 
   @Get()
