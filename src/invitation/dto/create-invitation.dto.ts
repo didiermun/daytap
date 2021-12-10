@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty } from 'class-validator';
 
 export class CreateInvitationDto {
-    @IsEmail()
-    email: string;
+  @IsEmail()
+  email: string;
 }

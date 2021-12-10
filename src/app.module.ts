@@ -5,6 +5,7 @@ import { InvitationModule } from './invitation/invitation.module';
 import { UserModule } from './user/user.module';
 import { JwtModule } from '@nestjs/jwt'
 import { jwtConstants } from './utils/jwt';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { jwtConstants } from './utils/jwt';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '24h' },
     }),
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
