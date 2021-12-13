@@ -1,4 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Report {
-    report: User;
-}
+/* eslint-disable prettier/prettier */
+export class Report{
+    id: string
+    date: string;
+    location: string;
+    amount: string;
+    reporterId: string;
+  }
+  
