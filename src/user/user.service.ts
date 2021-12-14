@@ -3,10 +3,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../prisma.service';
 import { LoginDto } from './dto/login.dto';
+import { hash, validatePassword } from 'src/utils/hashPassword';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private jwtService: JwtService,) {}
 
   async create(code: string,data: CreateUserDto) {
     const codeFound = await this.prisma.invitation.findFirst({
@@ -16,11 +18,14 @@ export class UserService {
     if (!codeFound) {
       throw new HttpException('Code provided not found', HttpStatus.NOT_FOUND);
     }
+
+    const hashedPassword = await hash(data.password)
+    
     return await this.prisma.user.create({ data: {
         email: data.email,
         lname: data.lname,
         fname: data.fname,
-        password: data.password,
+        password: hashedPassword,
         profile: data.profile,
       },
     });
@@ -43,13 +48,24 @@ export class UserService {
 
   async login(loginDto: LoginDto) {
     const user = await this.prisma.user.findFirst({
-      where: { email: loginDto.email, password: loginDto.password },
+      where: { email: loginDto.email},
     });
     if (!user) {
-      throw new HttpException('Wrong credentials', HttpStatus.NOT_FOUND)
+      throw new HttpException('Wrong credentials', HttpStatus.FORBIDDEN)
     }
 
-    return 'Loged successfully';
+    const doPasswordsMatch = await validatePassword(
+      loginDto.password,
+      user.password,
+    )
+
+    if (!doPasswordsMatch) {
+      throw new HttpException('Invalid email or password', HttpStatus.FORBIDDEN)
+    }
+
+    const token = this.jwtService.sign(user)
+
+    return {token, user};
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

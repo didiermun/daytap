@@ -12,12 +12,12 @@ import { CreateInvitationDto } from './dto/create-invitation.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { UpdateInvitationDto } from './dto/update-invitation.dto';
 
-@Controller('invitation')
+@Controller('invitations')
 @ApiTags('invitations')
 export class InvitationController {
   constructor(private readonly invitationService: InvitationService) {}
 
-  @Post()
+  @Post('invite')
   async create(@Body() createInvitationDto: CreateInvitationDto) {
     return await this.invitationService.create(createInvitationDto);
   }
@@ -27,17 +27,17 @@ export class InvitationController {
     return this.invitationService.findAll();
   }
 
-  @Get(':id')
+  @Get('invitation/:id')
   async findOne(@Param('id') id: string) {
     return this.invitationService.findOne(id);
   }
 
-  @Patch(':email')
+  @Patch('invitation/update-code/:email')
   async update(@Param('email') email: string) {
     return this.invitationService.update(email);
   }
 
-  @Delete(':id')
+  @Delete('invitation/:id')
   async remove(@Param('id') id: string) {
     return this.invitationService.remove(id);
   }

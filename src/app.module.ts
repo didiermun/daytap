@@ -9,12 +9,12 @@ import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
-    InvitationModule, 
-    UserModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '24h' },
     }),
+    InvitationModule, 
+    UserModule,
     ReportModule,
   ],
   controllers: [AppController],

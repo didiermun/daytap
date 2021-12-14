@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
-@Controller('user')
+@Controller('users')
 @ApiTags('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -13,7 +13,7 @@ export class UserController {
 
   @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
   @ApiResponse({ status: 403, description: 'Forbidden.'})
-  @Post('invitation/:code')
+  @Post('join/invitation/:code')
   async create(@Param('code') code: string,@Body() createUserDto: CreateUserDto) {
     return this.userService.create(code,createUserDto);
   }
@@ -23,17 +23,17 @@ export class UserController {
     return this.userService.findAll();
   }
 
-  @Get(':id')
+  @Get('user/:id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
 
-  @Patch(':id')
+  @Patch('user/:id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(id, updateUserDto);
   }
 
-  @Delete(':id')
+  @Delete('user/:id')
   async remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }

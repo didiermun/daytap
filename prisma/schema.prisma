@@ -21,7 +21,8 @@ model Invitation {
 
 model Report {
   id String @default(uuid()) @id
-  date DateTime @default(now())
+  date String
+  created_at DateTime @default(now())
   amount String
   location String
   reporterId String
