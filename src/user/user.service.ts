@@ -12,16 +12,20 @@ export class UserService {
 
   async create(code: string,data: CreateUserDto) {
     const codeFound = await this.prisma.invitation.findFirst({
-      where: { code: parseInt(code), email: data.email },
+      where: { code: parseInt(code), email: data.email, },
     });
 
     if (!codeFound) {
       throw new HttpException('Code provided not found', HttpStatus.NOT_FOUND);
     }
 
+    if (codeFound.isUsed){
+      throw new HttpException('Email and Code has already been used to create account.', HttpStatus.CONFLICT)
+    }
+
     const hashedPassword = await hash(data.password)
     
-    return await this.prisma.user.create({ data: {
+    const createUser =  await this.prisma.user.create({ data: {
         email: data.email,
         lname: data.lname,
         fname: data.fname,
@@ -29,6 +33,12 @@ export class UserService {
         profile: data.profile,
       },
     });
+    await this.prisma.invitation.update({
+      where: { id: codeFound.id },
+      data:{isUsed: true}
+    })
+
+    return createUser;
   }
 
   async findAll() {
