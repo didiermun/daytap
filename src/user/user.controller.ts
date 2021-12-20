@@ -15,13 +15,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
 
-  @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
-  @ApiResponse({ status: 403, description: 'Forbidden.'})
-  @Post('join/invitation/:code')
-  async create(@Param('code') code: string,@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(code,createUserDto);
-  }
-
   @Get()
   @UseGuards(UserGuard)
   async findAll(@Req() request: any) {
@@ -32,6 +25,19 @@ export class UserController {
   @Get('user/:id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+  
+
+  @ApiResponse({ status: 201, description: 'The record has been successfully created.'})
+  @ApiResponse({ status: 403, description: 'Forbidden.'})
+  @Post('join/invitation/:code')
+  async create(@Param('code') code: string,@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(code,createUserDto);
+  }
+
+  @Post('login')
+  async login(@Body() loginDto: LoginDto) {
+    return this.userService.login(loginDto);
   }
 
   @Patch('user/:id')
@@ -44,8 +50,4 @@ export class UserController {
     return this.userService.remove(id);
   }
 
-  @Post('login')
-  async login(@Body() loginDto: LoginDto) {
-    return this.userService.login(loginDto);
-  }
 }
