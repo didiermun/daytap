@@ -66,6 +66,8 @@ export class UserService {
     const token = this.jwtService.sign(user)
 
     return {token, user};
+
+    return user;
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

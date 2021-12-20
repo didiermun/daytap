@@ -11,6 +11,22 @@ export class ReportService {
         return await this.prisma.report.findMany();
     }
 
+    async findDateReports(date: string) {
+      return this.prisma.report.findMany({
+        where:{ 
+          date
+        }
+      })
+    }
+
+    async findUserReports(reporterId: string) {
+      return this.prisma.report.findMany({
+        where:{ 
+          reporterId
+        }
+      })
+    }
+
     async findOne(id: string) {
         const report = await this.prisma.report.findFirst({ where: { id: id } });
         if (!report) {

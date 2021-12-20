@@ -8,6 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   const config = new DocumentBuilder()
+  .addBearerAuth()
   .setTitle('Daily Tap')
   .setDescription('The Daily Tap API Documentation')
   .setVersion('1.0')

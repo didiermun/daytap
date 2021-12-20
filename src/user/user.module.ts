@@ -4,6 +4,7 @@ import { UserController } from './user.controller';
 import { PrismaService } from 'src/prisma.service';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from 'src/utils/jwt';
+import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
 
 @Module({
   imports: [
@@ -13,6 +14,6 @@ import { jwtConstants } from 'src/utils/jwt';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService, PrismaService],
+  providers: [UserService, PrismaService, CurrentUserInterceptor],
 })
 export class UserModule {}

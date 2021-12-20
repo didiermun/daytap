@@ -1,30 +1,39 @@
-// import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
-// import { Reflector } from '@nestjs/core'
-// import { JwtService } from '@nestjs/jwt'
+import { Injectable,
+    CanActivate,
+    ExecutionContext,
+    HttpException,
+    HttpStatus } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 
-// @Injectable()
-// export class UserGuard implements CanActivate {
-//   constructor(
-//     private readonly jwtService: JwtService,
-//     private readonly reflector: Reflector,
-//   ) {}
+@Injectable()
+export class UserGuard implements CanActivate {
 
-//   canActivate(context: ExecutionContext): boolean {
-//     const ctx = GqlExecutionContext.create(context).getContext()
-//     if (!ctx.req.headers.authorization) {
-//       throw new UnauthorizedException();
-//     }
+    constructor(
+        private readonly jwtService: JwtService,
+      ) {}
 
-//     ctx.user = this.jwtService.verify(ctx.req.headers.authorization)
+canActivate(context: ExecutionContext) {
+const request = context.switchToHttp().getRequest();
+// context.getHandler().
+let token = request.headers.authorization;
+if (!token) {
+ return false;
+}
+token = token.split(' ')[1];
+try{
+    const user = this.jwtService.verify(token)
+    if(!user){
+       throw new HttpException('Re login', HttpStatus.FORBIDDEN);
+    }
 
-//     const roles = this.reflector.get<string[]>('roles', context.getHandler())
+    return true;
+}
+catch (err) {
+    console.log(err); 
+    throw new HttpException('Invalid access token', HttpStatus.BAD_REQUEST);
+}
 
-//     if (!roles) return true
 
-//     if (roles.includes(ctx.user.role)) {
-//       return true
-//     } else {
-//       throw new ForbiddenError('Not authorized')
-//     }
-//   }
-// }
+// throw new HttpException('Unauthorized access', HttpStatus.UNAUTHORIZED);
+}
+}
