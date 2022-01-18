@@ -5,6 +5,7 @@ import { PrismaService } from '../prisma.service';
 import { LoginDto } from './dto/login.dto';
 import { hash, validatePassword } from 'src/utils/hashPassword';
 import { JwtService } from '@nestjs/jwt';
+import { JwtPayload } from 'src/auth/jwt.strategy';
 
 @Injectable()
 export class UserService {
@@ -39,6 +40,10 @@ export class UserService {
     })
 
     return createUser;
+  }
+
+  async validateUser(payload:JwtPayload){
+    return await this.prisma.user.findFirst({ where: { id: payload.username}})
   }
 
   async findAll() {

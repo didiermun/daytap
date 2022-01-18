@@ -1,16 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Headers, UseInterceptors, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginDto } from './dto/login.dto';
 import { ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UserGuard } from 'src/guards/user.guard';
-import { CurrentUserInterceptor } from 'src/interceptors/CurrentUserInterceptor';
 
 @Controller('users')
 @ApiBearerAuth()
 @ApiTags('users')
-@UseInterceptors(CurrentUserInterceptor)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -18,7 +16,7 @@ export class UserController {
   @Get()
   @UseGuards(UserGuard)
   async findAll(@Req() request: any) {
-    console.log(request);
+    console.log(request.user);
     return this.userService.findAll();
   }
 
